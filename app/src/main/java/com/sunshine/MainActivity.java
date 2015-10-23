@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
         {
             return inflater.inflate(R.layout.fragment_main, container, false);
-            //return rootView;
         }
     }
 
