@@ -50,7 +50,12 @@ public class ForecastFragment extends Fragment
         int id = item.getItemId();
         if (id == R.id.action_refresh)
         {
-            new ForecastFetchTask().execute();
+            new ForecastFetchTask().execute("Lahore");
+            return true;
+        }
+        if (id == R.id.action_settings)
+        {
+
             return true;
         }
 
@@ -75,7 +80,7 @@ public class ForecastFragment extends Fragment
         return view;
     }
 
-    class ForecastFetchTask extends AsyncTask<Void, Void, Void>
+    class ForecastFetchTask extends AsyncTask<String, Void, Void>
     {
         private final String LOG_TAG = ForecastFetchTask.class.getSimpleName();
 
@@ -83,13 +88,28 @@ public class ForecastFragment extends Fragment
         BufferedReader reader = null;
 
         @Override
-        protected Void doInBackground(Void... params)
+        protected Void doInBackground(String... params)
         {
             try
             {
-                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=Lahore,PK&mode=json&units=metric&cnt=7";
-                String apiKey = "&appid=bd82977b86bf27fb59a04b61b657fb6f";
-                String finalUrl = baseUrl + apiKey;
+                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
+                //String cityName = "Lahore";
+                String cityName = params[0];
+                String postalCode = "";
+                String countryName = ",PK";
+                String mode = "&mode=json";
+                String units = "&units=metric";
+                String numberOfDays = "&cnt=7";
+                String apiKey = "&appid=bd82977b86bf27fb59a04b61b657fb6f";  //+ BuildConfig.OPEN_WEATHER_MAP_API_KEY;
+
+                //String finalUrl = "";
+
+                //if( postalCode == null )
+                //    finalUrl = baseUrl + cityName + countryName + mode + units + numberOfDays + apiKey;
+                //else if( cityName == null || countryName == null )
+                //    finalUrl = baseUrl + cityName + countryName + mode + units + numberOfDays + apiKey;
+
+                String finalUrl = baseUrl + cityName + countryName + mode + units + numberOfDays + apiKey;
                 URL url = new URL(finalUrl);
 
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -98,7 +118,7 @@ public class ForecastFragment extends Fragment
 
 
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
 
                 if (inputStream == null)
                     return null;
