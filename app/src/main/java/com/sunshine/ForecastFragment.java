@@ -11,17 +11,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
-
+import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -61,6 +60,7 @@ public class ForecastFragment extends Fragment
         if (id == R.id.action_refresh)
         {
             new ForecastFetchTask().execute("Lahore");
+            forecastAdapter.notifyDataSetChanged();
             return true;
         }
         if (id == R.id.action_settings)
@@ -79,11 +79,15 @@ public class ForecastFragment extends Fragment
 
         new ForecastFetchTask().execute("Lahore");
 
-        weatherData.add("Today - Sunny - 88/63");
-        weatherData.add("Today - Rainy - 50/63");
-        weatherData.add("Today - Frosty - 09/63");
-
         listView = (ListView) view.findViewById(R.id.listView_forecast);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+
+                Toast.makeText(getActivity(), forecastAdapter.getItem(position).toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
@@ -151,13 +155,9 @@ public class ForecastFragment extends Fragment
 
                 highAndLow = formatHighLows(high, low);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
+                data.add(resultStrs[i]);
             }
 
-            for (String s : resultStrs)
-            {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
-                data.add(s);
-            }
             return data;
 
         }
@@ -246,16 +246,4 @@ public class ForecastFragment extends Fragment
             listView.setAdapter(forecastAdapter);
         }
     }
-
-    /*
-    public static double getMaxTemperatureForDay(String weatherJsonStr, int dayIndex) throws JSONException
-    {
-        // TODO: add parsing code here
-        JSONObject weatherForecast = new JSONObject(weatherJsonStr);
-        JSONArray days = weatherForecast.getJSONArray("list");
-        JSONObject getDayInfo = days.getJSONObject(dayIndex);
-        JSONObject temperatureMax = getDayInfo.getJSONObject("temp");
-        return temperatureMax.getDouble("max");
-    }
-    */
 }
