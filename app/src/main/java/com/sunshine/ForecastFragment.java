@@ -84,10 +84,10 @@ public class ForecastFragment extends Fragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                //Intent i = new Intent( getActivity() , DetailsActivity.class );
-                Toast.makeText(getActivity(), forecastAdapter.getItem(position).toString(), Toast.LENGTH_SHORT).show();
-                //i.putExtra("Data" , forecastAdapter.getItem(position).toString() );
-                //startActivity(i);
+                Intent i = new Intent( getActivity() , DetailActivity.class );
+                //Toast.makeText(getActivity(), forecastAdapter.getItem(position).toString(), Toast.LENGTH_SHORT).show();
+                i.putExtra("Data", forecastAdapter.getItem(position).toString());
+                startActivity(i);
             }
         });
 
