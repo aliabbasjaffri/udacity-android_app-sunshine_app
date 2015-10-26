@@ -1,5 +1,6 @@
 package com.sunshine;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -65,7 +66,6 @@ public class ForecastFragment extends Fragment
         }
         if (id == R.id.action_settings)
         {
-
             return true;
         }
 
@@ -84,8 +84,10 @@ public class ForecastFragment extends Fragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-
+                //Intent i = new Intent( getActivity() , DetailsActivity.class );
                 Toast.makeText(getActivity(), forecastAdapter.getItem(position).toString(), Toast.LENGTH_SHORT).show();
+                //i.putExtra("Data" , forecastAdapter.getItem(position).toString() );
+                //startActivity(i);
             }
         });
 
