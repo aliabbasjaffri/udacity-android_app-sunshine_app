@@ -13,11 +13,11 @@ import android.widget.TextView;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailActivityFragment extends Fragment {
+public class DetailFragment extends Fragment {
 
     String weatherReport;
 
-    public DetailActivityFragment()
+    public DetailFragment()
     {
         weatherReport = null;
     }
