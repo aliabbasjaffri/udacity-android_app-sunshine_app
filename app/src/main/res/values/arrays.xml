@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="temperature_modes">
+        <item>@string/temperature_unit_metric_label</item>
+        <item>@string/temperature_unit_imperial_label</item>
+    </string-array>
+
+    <string-array name="temperature_modes_values">
+        <item>@string/temperature_unit_metric</item>
+        <item>@string/temperature_unit_imperial</item>
+    </string-array>
+
+</resources>

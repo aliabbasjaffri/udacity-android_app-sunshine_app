@@ -1,5 +1,6 @@
 package com.sunshine;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,13 @@ public class DetailFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         inflater.inflate(R.menu.menu_detail, menu);
@@ -34,6 +42,7 @@ public class DetailFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_settings)
         {
+            startActivity(new Intent(getActivity() , SettingsActivity.class));
             return true;
         }
 

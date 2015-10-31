@@ -26,7 +26,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.sunshine.MainActivity" />
         </activity>
-        <activity android:name="com.tempwork.MoreActivity" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.sunshine.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>

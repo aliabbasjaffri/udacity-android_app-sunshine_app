@@ -1,41 +1,45 @@
 package com.sunshine;
 
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.format.Time;
+import java.net.URL;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import android.os.AsyncTask;
+import android.content.Intent;
+import org.json.JSONException;
+import android.view.ViewGroup;
+import java.io.BufferedReader;
+import android.widget.ListView;
+import android.text.format.Time;
+import java.io.InputStreamReader;
+import android.widget.AdapterView;
+import java.net.HttpURLConnection;
+import java.text.SimpleDateFormat;
+import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
  * Created by aliabbasjaffri on 24/10/15.
  */
 public class ForecastFragment extends Fragment
 {
+    Double latitude = null;
+    Double longitude = null;
     ListView listView = null;
+    String cityLocation = null;
+    String temperatureMode = null;
     String forecastJsonStr = null;
+    SharedPreferences sharedPref = null;
     ForecastAdapter forecastAdapter = null;
     ArrayList<String> weatherData = new ArrayList<>();
+
 
     public ForecastFragment( )
     {
@@ -45,31 +49,14 @@ public class ForecastFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+    public void onStart()
     {
-        inflater.inflate(R.menu.forecastfragment_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        int id = item.getItemId();
-        if (id == R.id.action_refresh)
-        {
-            new ForecastFetchTask().execute("Lahore");
-            forecastAdapter.notifyDataSetChanged();
-            return true;
-        }
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        super.onStart();
+        updateWeather();
     }
 
     @Override
@@ -77,15 +64,11 @@ public class ForecastFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        new ForecastFetchTask().execute("Lahore");
-
         listView = (ListView) view.findViewById(R.id.listView_forecast);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                Intent i = new Intent( getActivity() , DetailActivity.class );
-                //Toast.makeText(getActivity(), forecastAdapter.getItem(position).toString(), Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(getActivity(), DetailActivity.class);
                 i.putExtra("Data", forecastAdapter.getItem(position).toString());
                 startActivity(i);
             }
@@ -93,6 +76,14 @@ public class ForecastFragment extends Fragment
 
         return view;
     }
+
+    void updateWeather()
+    {
+        cityLocation = sharedPref.getString( getString(R.string.settings_location_key) , getString(R.string.settings_location_default));
+        temperatureMode = sharedPref.getString( getString( R.string.settings_mode_key ) , getString( R.string.settings_mode_default) );
+        new ForecastFetchTask().execute(cityLocation);
+    }
+
 
     class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
     {
@@ -109,6 +100,16 @@ public class ForecastFragment extends Fragment
 
         private String formatHighLows(double high, double low)
         {
+            if (temperatureMode.equals(getString(R.string.temperature_unit_imperial)))
+            {
+                high = (high * 1.8) + 32;
+                low = (low * 1.8) + 32;
+            }
+            else if (!temperatureMode.equals(getString(R.string.temperature_unit_metric)))
+            {
+                Log.d(LOG_TAG, "Unit type not found: " + temperatureMode);
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
@@ -124,9 +125,16 @@ public class ForecastFragment extends Fragment
             final String OWM_MAX = "max";
             final String OWM_MIN = "min";
             final String OWM_DESCRIPTION = "main";
+            final String OWM_LATITUDE = "lat";
+            final String OWM_LONGITUDE = "lon";
 
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
+            JSONObject city = forecastJson.getJSONObject("city");
+            JSONObject locationCordinates = city.getJSONObject("coord");
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
+
+            latitude = locationCordinates.getDouble(OWM_LATITUDE);
+            longitude = locationCordinates.getDouble(OWM_LONGITUDE);
 
             Time dayTime = new Time();
             dayTime.setToNow();
@@ -169,6 +177,7 @@ public class ForecastFragment extends Fragment
         {
             try
             {
+                //http://api.openweathermap.org/data/2.5/forecast/daily?q=Lahore,PK&mode=json&units=metric&cnt=7&appid=bd82977b86bf27fb59a04b61b657fb6f
                 String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
                 String cityName = params[0];
                 String postalCode = "";
@@ -177,6 +186,8 @@ public class ForecastFragment extends Fragment
                 String units = "&units=metric";
                 String numberOfDays = "&cnt=7";
                 String apiKey = "&appid=bd82977b86bf27fb59a04b61b657fb6f";  //+ BuildConfig.OPEN_WEATHER_MAP_API_KEY;
+
+                //Toast.makeText(getActivity() , "City = " + params[0] + " and mode = " + params[1] ,Toast.LENGTH_SHORT).show();
 
                 String finalUrl = baseUrl + cityName + countryName + mode + units + numberOfDays + apiKey;
                 URL url = new URL(finalUrl);
@@ -220,6 +231,7 @@ public class ForecastFragment extends Fragment
                     try
                     {
                         reader.close();
+                        //Toast.makeText(getActivity() , "City = " + params[0] + " and mode = " + params[1] ,Toast.LENGTH_SHORT).show();
                     }
                     catch (final IOException e)
                     {
