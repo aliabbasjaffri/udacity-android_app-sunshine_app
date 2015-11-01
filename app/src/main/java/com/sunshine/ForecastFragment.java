@@ -185,9 +185,7 @@ public class ForecastFragment extends Fragment
                 String mode = "&mode=json";
                 String units = "&units=metric";
                 String numberOfDays = "&cnt=7";
-                String apiKey = "&appid=bd82977b86bf27fb59a04b61b657fb6f";  //+ BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-
-                //Toast.makeText(getActivity() , "City = " + params[0] + " and mode = " + params[1] ,Toast.LENGTH_SHORT).show();
+                String apiKey = "&appid=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 
                 String finalUrl = baseUrl + cityName + countryName + mode + units + numberOfDays + apiKey;
                 URL url = new URL(finalUrl);
@@ -231,7 +229,6 @@ public class ForecastFragment extends Fragment
                     try
                     {
                         reader.close();
-                        //Toast.makeText(getActivity() , "City = " + params[0] + " and mode = " + params[1] ,Toast.LENGTH_SHORT).show();
                     }
                     catch (final IOException e)
                     {
