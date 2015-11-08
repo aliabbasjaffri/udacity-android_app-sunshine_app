@@ -12,16 +12,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        Intent i = getIntent();
-        String weatherReport = i.getStringExtra("Data");
-
-        Bundle bundle = new Bundle();
-        bundle.putString("Data", weatherReport);
-
-        Fragment fragment = new DetailFragment();
-        fragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, new DetailFragment()).commit();
     }
 
 }

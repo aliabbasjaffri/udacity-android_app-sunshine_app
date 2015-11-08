@@ -13,7 +13,8 @@
 
         <provider
             android:authorities="com.sunshine"
-            android:name=".data.WeatherProvider"/>
+            android:name=".data.WeatherProvider"
+            android:exported="true"/>
 
         <activity android:name=".MainActivity">
             <intent-filter>
