@@ -29,52 +29,18 @@ import java.util.Vector;
 /**
  * Created by aliabbasjaffri on 01/11/15.
  */
-class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
+class ForecastFetchTask extends AsyncTask<String, Void, Void>
 {
     private final String LOG_TAG = ForecastFetchTask.class.getSimpleName();
 
     private Context mContext = null;
-    private Double latitude = null;
-    private Double longitude = null;
     private BufferedReader reader = null;
     private String forecastJsonStr = null;
-    private String temperatureMode = null;
     private HttpURLConnection urlConnection = null;
-    private ForecastAdapter mForecastAdapter = null;
-    private ArrayList<String> weatherData = new ArrayList<>();
 
-    public ForecastFetchTask(Context context, ForecastAdapter forecastAdapter)
+    public ForecastFetchTask(Context context)
     {
         mContext = context;
-        mForecastAdapter = forecastAdapter;
-    }
-
-    private String getReadableDateString(long time)
-    {
-        Date date = new Date(time);
-        SimpleDateFormat format = new SimpleDateFormat("E, MMM d");
-        return format.format(date).toString();
-    }
-
-    private String formatHighLows(double high, double low)
-    {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        temperatureMode = sharedPref.getString( mContext.getString(R.string.settings_mode_key) , mContext.getString(R.string.settings_mode_default) );
-
-        if (temperatureMode.equals(mContext.getString(R.string.temperature_unit_imperial)))
-        {
-            high = (high * 1.8) + 32;
-            low = (low * 1.8) + 32;
-        }
-        else if (!temperatureMode.equals(mContext.getString(R.string.temperature_unit_metric)))
-        {
-            Log.d(LOG_TAG, "Unit type not found: " + temperatureMode);
-        }
-
-        long roundedHigh = Math.round(high);
-        long roundedLow = Math.round(low);
-
-        return roundedHigh + "/" + roundedLow;
     }
 
     long addLocation(String locationSetting, String cityName, double lat, double lon)
@@ -119,29 +85,11 @@ class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
         return locationId;
     }
 
-    ArrayList<String> convertContentValuesToUXFormat(Vector<ContentValues> cvv)
-    {
-        // return strings to keep UI functional for now
-        ArrayList<String> resultStrs = new ArrayList<String>();
-        for ( int i = 0; i < cvv.size(); i++ )
-        {
-            ContentValues weatherValues = cvv.elementAt(i);
-
-            String highAndLow = formatHighLows(
-                    weatherValues.getAsDouble(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP),
-                    weatherValues.getAsDouble(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP));
-
-            resultStrs.add( getReadableDateString(
-                    weatherValues.getAsLong(WeatherContract.WeatherEntry.COLUMN_DATE)) +
-                    " - " + weatherValues.getAsString(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC) +
-                    " - " + highAndLow);
-        }
-        return resultStrs;
-    }
-
-    private ArrayList<String> getWeatherDataFromJson(String forecastJsonStr, String locationSetting) throws JSONException
+    private void getWeatherDataFromJson(String forecastJsonStr, String locationSetting) throws JSONException
     {
         ArrayList<String> data = new ArrayList<>();
+
+        int inserted = 0;
 
         final String OWM_CITY = "city";
         final String OWM_CITY_NAME = "name";
@@ -182,16 +130,7 @@ class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
 
             long locationId = addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
 
-            // Insert the new weather information into the database
             Vector<ContentValues> cVVector = new Vector<>(weatherArray.length());
-
-            // OWM returns daily forecasts based upon the local time of the city that is being
-            // asked for, which means that we need to know the GMT offset to translate this data
-            // properly.
-
-            // Since this data is also sent in-order and the first day is always the
-            // current day, we're going to take advantage of that to get a nice
-            // normalized UTC date for all of our weather.
 
             Time dayTime = new Time();
             dayTime.setToNow();
@@ -214,10 +153,8 @@ class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
                 String description;
                 int weatherId;
 
-                // Get the JSON object representing the day
                 JSONObject dayForecast = weatherArray.getJSONObject(i);
 
-                // Cheating to convert this to UTC time, which is what we want anyhow
                 dateTime = dayTime.setJulianDay(julianStartDay+i);
 
                 pressure = dayForecast.getDouble(OWM_PRESSURE);
@@ -229,8 +166,6 @@ class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
                 description = weatherObject.getString(OWM_DESCRIPTION);
                 weatherId = weatherObject.getInt(OWM_WEATHER_ID);
 
-                // Temperatures are in a child object called "temp".  Try not to name variables
-                // "temp" when working with temperature.  It confuses everybody.
                 JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
                 high = temperatureObject.getDouble(OWM_MAX);
                 low = temperatureObject.getDouble(OWM_MIN);
@@ -256,33 +191,25 @@ class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
             {
                 ContentValues[] cvArray = new ContentValues[cVVector.size()];
                 cVVector.toArray(cvArray);
-                mContext.getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
-
+                inserted = mContext.getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, cvArray);
             }
-
-            Log.d(LOG_TAG, "FetchWeatherTask Complete. " + cVVector.size() + " Inserted");
-
-            data = convertContentValuesToUXFormat(cVVector);
-            return data;
+            Log.d(LOG_TAG, "FetchForecastTask Complete. " + inserted + " Inserted");
         }
         catch (JSONException e)
         {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
-
-        return data;
-
     }
 
     @Override
-    protected ArrayList<String> doInBackground(String... params)
+    protected Void doInBackground(String... params)
     {
         String cityName = "";
 
         try
         {
-            //http://api.openweathermap.org/data/2.5/forecast/daily?q=Lahore,PK&mode=json&units=metric&cnt=7&appid=bd82977b86bf27fb59a04b61b657fb6f
+            //http://api.openweathermap.org/data/2.5/forecast/daily?q=Lahore,PK&mode=json&units=metric&cnt=7&appid=7f4158e8a005df42d47eba65613e201f
             String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
             cityName = params[0];
             String postalCode = "";
@@ -293,6 +220,9 @@ class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
             String apiKey = "&appid=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 
             String finalUrl = baseUrl + cityName + countryName + mode + units + numberOfDays + apiKey;
+
+            Log.i(LOG_TAG + " Final URL", finalUrl);
+
             URL url = new URL(finalUrl);
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -318,8 +248,9 @@ class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
                 return null;
 
             forecastJsonStr = buffer.toString();
+            getWeatherDataFromJson(forecastJsonStr , cityName);
         }
-        catch (IOException e)
+        catch (IOException|JSONException e)
         {
             e.printStackTrace();
         }
@@ -341,27 +272,6 @@ class ForecastFetchTask extends AsyncTask<String, Void, ArrayList<String>>
                 }
             }
         }
-
-        try
-        {
-            weatherData = getWeatherDataFromJson(forecastJsonStr , cityName);
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        return weatherData;
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<String> s)
-    {
-        super.onPostExecute(s);
-        mForecastAdapter.clear();
-        for(String dayForecastStr : s) {
-            mForecastAdapter.add(dayForecastStr);
-        }
-        mForecastAdapter.notifyDataSetChanged();
+        return null;
     }
 }
