@@ -103,16 +103,18 @@ public class MainActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
+
         String location = Utility.getPreferredLocation( this );
+        ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
 
         if (location != null && !location.equals(mLocation))
         {
-            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
             if ( null != ff )
             {
                 ff.onLocationChanged();
             }
             mLocation = location;
         }
+        ff.mForecastAdapter.notifyDataSetChanged();
     }
 }
