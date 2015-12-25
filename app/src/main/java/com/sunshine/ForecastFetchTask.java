@@ -248,6 +248,7 @@ class ForecastFetchTask extends AsyncTask<String, Void, Void>
                 return null;
 
             forecastJsonStr = buffer.toString();
+            Log.d("ForecastJSON", forecastJsonStr);
             getWeatherDataFromJson(forecastJsonStr , cityName);
         }
         catch (IOException|JSONException e)
