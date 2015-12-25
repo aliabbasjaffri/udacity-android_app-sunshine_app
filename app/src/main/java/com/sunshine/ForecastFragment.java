@@ -27,10 +27,12 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 {
     private static final int FORECAST_LOADER = 0;
 
-    ListView listView = null;
-    String cityLocation = null;
-    SharedPreferences sharedPref = null;
+    private ListView listView = null;
+    private String cityLocation = null;
+    private SharedPreferences sharedPref = null;
     ForecastAdapter mForecastAdapter = null;
+    private int mPosition = ListView.INVALID_POSITION;
+    private static final String SELECTED_KEY = "selectedPosition";
 
     private static final String[] FORECAST_COLUMNS = {
             WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
@@ -66,7 +68,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -76,24 +78,23 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         listView.setAdapter(mForecastAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView adapterView, View view, int position, long l)
-            {
+            public void onItemClick(AdapterView adapterView, View view, int position, long l) {
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-
-                if (cursor != null)
-                {
+                mPosition = position;
+                if (cursor != null) {
                     String locationSetting = Utility.getPreferredLocation(getActivity());
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                    ((Callback) getActivity())
+                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
                                     locationSetting, cursor.getLong(COL_WEATHER_DATE)
                             ));
-                    startActivity(intent);
                 }
             }
         });
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY))
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
 
         return view;
     }
@@ -120,6 +121,18 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        // When tablets rotate, the currently selected list item needs to be saved.
+        // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
+        // so check for that before storing.
+        if (mPosition != ListView.INVALID_POSITION)
+            outState.putInt(SELECTED_KEY, mPosition);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
         String locationSetting = Utility.getPreferredLocation(getActivity());
@@ -134,11 +147,27 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
         mForecastAdapter.swapCursor(data);
+        if (mPosition != ListView.INVALID_POSITION)
+            listView.smoothScrollToPosition(mPosition);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
         mForecastAdapter.swapCursor(null);
+    }
+
+
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback
+    {
+        /**
+        * DetailFragmentCallback for when an item has been selected.
+        */
+        void onItemSelected(Uri dateUri);
     }
 }

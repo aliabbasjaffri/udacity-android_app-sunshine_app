@@ -25,7 +25,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback
 {
     private final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity
 
         String location = Utility.getPreferredLocation( this );
         ForecastFragment forecastFragment = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+        DetailFragment detailFragment = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
 
         if (location != null && !location.equals(mLocation))
         {
@@ -127,8 +128,29 @@ public class MainActivity extends AppCompatActivity
             {
                 forecastFragment.onLocationChanged();
             }
+            if ( null != detailFragment )
+            {
+                detailFragment.onLocationChanged(location);
+            }
             mLocation = location;
         }
         forecastFragment.mForecastAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemSelected(Uri contentUri)
+    {
+        if (mTwoPane)
+        {
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI, contentUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG).commit();
+        }
+        else
+            startActivity(new Intent(this, DetailActivity.class).setData(contentUri));
     }
 }

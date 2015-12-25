@@ -2,6 +2,7 @@ package com.sunshine;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -34,6 +35,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private String weatherReport;
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
     private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
+
+    static final String DETAIL_URI = "URI";
 
     private static final String[] DETAIL_COLUMNS = {
             WeatherEntry.TABLE_NAME + "." + WeatherEntry._ID,
@@ -71,6 +74,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mHumidity;
     private TextView mWind;
     private TextView mPressure;
+
+    private Uri mUri;
 
     public DetailFragment()
     {
@@ -125,6 +130,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        Bundle arguments = getArguments();
+        if (arguments != null)
+            mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
+
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mIcon = (ImageView) rootView.findViewById(R.id.detailFragmentIcon);
         mDate = (TextView) rootView.findViewById(R.id.detailFragmentDate);
@@ -138,6 +147,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         return rootView;
     }
 
+    void onLocationChanged( String newLocation )
+    {
+        // replace the uri, since the location has changed
+        Uri uri = mUri;
+        if (null != uri)
+        {
+            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
+            Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
+            mUri = updatedUri;
+            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
+        }
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState)
     {
@@ -148,20 +170,18 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
-        Log.v(LOG_TAG, "In onCreateLoader");
-        Intent intent = getActivity().getIntent();
-        if (intent == null || intent.getData() == null) {
-            return null;
+        if( null != mUri )
+        {
+            return new CursorLoader(
+                    getActivity(),
+                    mUri,
+                    DETAIL_COLUMNS,
+                    null,
+                    null,
+                    null
+            );
         }
-
-        return new CursorLoader(
-                getActivity(),
-                intent.getData(),
-                DETAIL_COLUMNS,
-                null,
-                null,
-                null
-        );
+        return null;
     }
 
     @Override
