@@ -16,7 +16,8 @@
             android:name=".data.WeatherProvider"
             android:exported="true"/>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +38,7 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/SettingsTheme">
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value="com.sunshine.MainActivity" />

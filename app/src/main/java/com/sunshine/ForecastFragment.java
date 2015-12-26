@@ -56,6 +56,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
 
+    private boolean mUseTodayLayout;
+
     public ForecastFragment( )
     {
     }
@@ -96,7 +98,16 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY))
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
 
+        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+
         return view;
+    }
+
+    public void setUseTodayLayout(boolean useTodayLayout)
+    {
+        mUseTodayLayout = useTodayLayout;
+        if (mForecastAdapter != null)
+            mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
     }
 
     void onLocationChanged( )
