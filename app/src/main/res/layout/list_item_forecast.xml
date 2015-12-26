@@ -6,51 +6,67 @@
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
     android:background="@drawable/touch_selector"
-    android:padding="8dp">
+    >
 
-    <ImageView
-        android:id="@+id/list_item_icon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_launcher"/>
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/list_item_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="weatherImage"
+            android:src="@drawable/ic_logo"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:paddingLeft="16dp">
+        android:layout_weight="10"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/list_item_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="san-serif-condensed"
+            android:textAppearance="?android:textAppearanceLarge"
             android:text="Tomorrow"/>
 
         <TextView
             android:id="@+id/list_item_forecast_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="san-serif-condensed"
+            android:textAppearance="?android:textAppearanceSmall"
             android:text="Clear"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginRight="5dp">
+        android:layout_weight="3">
 
         <TextView
             android:id="@+id/list_item_high_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="san-serif-condensed"
+            android:textAppearance="?android:textAppearanceLarge"
             android:text="81"/>
 
         <TextView
             android:id="@+id/list_item_low_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="san-serif-condensed"
+            android:textAppearance="?android:textAppearanceSmall"
             android:text="68"/>
     </LinearLayout>
 

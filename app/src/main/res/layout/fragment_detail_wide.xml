@@ -1,105 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_width="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent">
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/detailFragmentDay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Today"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:minWidth="56dp"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/detailFragmentDate"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/detailFragmentDay"
+                android:fontFamily="sans-serif-condensed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today"
+                android:minWidth="120dp"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/detailFragmentDate"
+                android:fontFamily="sans-serif-condensed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25 December 2015"
+                android:textColor="@color/grey_700"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp">
+
+            <TextView
+                android:id="@+id/detailFragmentHighTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="21"
+                android:textSize="96sp" />
+
+            <TextView
+                android:id="@+id/detailFragmentLowTemperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:text="1"
+                android:textSize="48sp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/detailFragmentHumidity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Humidity"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-condensed"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/detailFragmentWind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Wind"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-condensed"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:id="@+id/detailFragmentPressure"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pressure"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-condensed"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_height="wrap_content"
-            android:text="25 December 2015"
-            android:layout_marginTop="10dp"
-            android:textSize="16sp" />
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="16dp"
+            >
+
+            <ImageView
+                android:src="@drawable/ic_launcher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/detailFragmentIcon" />
+
+            <TextView
+                android:id="@+id/detailFragmentForecastText"
+                android:text="Clear"
+                android:fontFamily="sans-serif-condensed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:textColor="@color/grey_700"
+                android:textAppearance="?android:textAppearanceLarge" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/detailFragmentHighTemperature"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="21"
-            android:textSize="32sp"
-            android:textAlignment="center"
-            android:paddingTop="10dp"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/detailFragmentLowTemperature"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="1"
-            android:textSize="22sp"
-            android:textAlignment="center"
-            android:paddingTop="10dp"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/detailFragmentHumidity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Humidity"
-            android:textSize="16sp"
-            android:layout_marginTop="10dp" />
-
-        <TextView
-            android:id="@+id/detailFragmentWind"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Wind"
-            android:textSize="16sp"
-            android:layout_marginTop="10dp" />
-
-        <TextView
-            android:id="@+id/detailFragmentPressure"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pressure"
-            android:textSize="16sp"
-            android:layout_marginTop="10dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:src="@drawable/ic_launcher"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:id="@+id/detailFragmentIcon" />
-
-        <TextView
-            android:text="Clear"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:gravity="center_vertical|center_horizontal|top"
-            android:id="@+id/detailFragmentForecastText"
-            android:textSize="15sp" />
-
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

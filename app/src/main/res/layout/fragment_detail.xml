@@ -9,70 +9,70 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="left"
         tools:context="com.sunshine.DetailActivity">
 
         <TextView
             android:id="@+id/detailFragmentDay"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Today"
-            android:layout_gravity="left"
-            android:gravity="start|left"
-            android:paddingLeft="10dp"
-            android:textSize="16dp" />
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            />
 
         <TextView
             android:id="@+id/detailFragmentDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="25th December"
-            android:layout_gravity="left"
-            android:gravity="start|left"
-            android:paddingLeft="10dp"
-            android:textSize="16dp" />
+            android:textColor="@color/grey_700"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="16dp"
             android:layout_height="wrap_content">
 
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                >
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:fontFamily="sans-serif-light"
                     android:text="21"
                     android:id="@+id/detailFragmentHighTemperature"
-                    android:textAlignment="center"
-                    android:textSize="32sp"
-                    android:gravity="center" />
+                    android:textSize="96sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_gravity="center_horizontal"
                     android:text="11"
                     android:id="@+id/detailFragmentLowTemperature"
-                    android:textAlignment="center"
-                    android:textSize="22sp"
-                    android:gravity="center"
-                    android:layout_marginTop="15dp" />
+                    android:textSize="48sp"
+                    android:textColor="@color/grey_700"
+                    android:textAlignment="center" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center_horizontal">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                >
 
                 <ImageView
                     android:src="@drawable/ic_launcher"
@@ -83,16 +83,19 @@
                 <TextView
                     android:text="Clear"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:gravity="center_vertical|center_horizontal|top"
                     android:id="@+id/detailFragmentForecastText"
-                    android:textSize="15sp" />
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textColor="@color/grey_700"
+                    android:textSize="15sp"
+                    android:textAlignment="center" />
 
             </LinearLayout>
 
         </LinearLayout>
 
         <TextView
+            android:layout_marginTop="16dp"
             android:id="@+id/detailFragmentHumidity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
