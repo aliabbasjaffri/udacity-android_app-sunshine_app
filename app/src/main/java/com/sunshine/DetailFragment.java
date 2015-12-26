@@ -74,6 +74,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mHumidity;
     private TextView mWind;
     private TextView mPressure;
+    private WindMill mWindMill;
 
     private Uri mUri;
 
@@ -144,6 +145,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mHumidity = (TextView) rootView.findViewById(R.id.detailFragmentHumidity);
         mWind = (TextView) rootView.findViewById(R.id.detailFragmentWind);
         mPressure = (TextView) rootView.findViewById(R.id.detailFragmentPressure);
+        mWindMill = (WindMill) rootView.findViewById(R.id.windMill);
         return rootView;
     }
 
@@ -225,6 +227,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             float windSpeedStr = data.getFloat(COL_WEATHER_WIND_SPEED);
             float windDirStr = data.getFloat(COL_WEATHER_DEGREES);
             mWind.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
+
+            ////////////////////////////////
+            mWindMill.setSpeed(windSpeedStr);
+            ////////////////////////////////
 
             // Read pressure from cursor and update view
             float pressure = data.getFloat(COL_WEATHER_PRESSURE);
