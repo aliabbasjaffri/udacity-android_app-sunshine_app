@@ -1,6 +1,8 @@
 package com.sunshine.service;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ContentUris;
 import android.database.Cursor;
@@ -69,6 +71,8 @@ public class SunshineService extends IntentService
 
             URL url = new URL(builtUri.toString());
 
+            Log.e(LOG_TAG, url.toString());
+
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -91,6 +95,7 @@ public class SunshineService extends IntentService
 
             forecastJsonStr = buffer.toString();
             getWeatherDataFromJson(forecastJsonStr, locationQuery);
+            Log.e(LOG_TAG, forecastJsonStr);
         }
         catch (IOException e)
         {
@@ -296,5 +301,15 @@ public class SunshineService extends IntentService
 
         locationCursor.close();
         return locationId;
+    }
+
+    public static class AlarmReceiver extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            context.startService(new Intent(context, SunshineService.class)
+                    .putExtra(SunshineService.LOCATION_QUERY_EXTRA, intent.getStringExtra(SunshineService.LOCATION_QUERY_EXTRA)));
+        }
     }
 }
