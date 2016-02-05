@@ -39,10 +39,12 @@
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity"
             android:theme="@style/SettingsTheme">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.sunshine.MainActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sunshine.MainActivity" />
         </activity>
+
+        <service android:name=".service.SunshineService"/>
 
     </application>
 

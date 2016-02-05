@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.sunshine.data.WeatherContract;
+import com.sunshine.service.SunshineService;
 
 /**
  * Created by aliabbasjaffri on 24/10/15.
@@ -28,7 +29,6 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     private static final int FORECAST_LOADER = 0;
 
     private ListView listView = null;
-    private String cityLocation = null;
     private SharedPreferences sharedPref = null;
     ForecastAdapter mForecastAdapter = null;
     private int mPosition = ListView.INVALID_POSITION;
@@ -118,9 +118,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     void updateWeather()
     {
-        cityLocation = Utility.getPreferredLocation(getActivity());
-        ForecastFetchTask fetchWeather = new ForecastFetchTask(getActivity());
-        fetchWeather.execute(cityLocation);
+        getActivity().startService(new Intent( getActivity() , SunshineService.class)
+                .putExtra(SunshineService.LOCATION_QUERY_EXTRA , Utility.getPreferredLocation(getActivity())));
+
         mForecastAdapter.notifyDataSetChanged();
     }
 
