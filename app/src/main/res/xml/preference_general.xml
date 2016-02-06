@@ -23,4 +23,24 @@
             android:entryValues="@array/temperature_modes_values"/>
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="Notifications">
+        <CheckBoxPreference
+            android:title="@string/pref_enable_notifications_label"
+            android:key="@string/pref_enable_notifications_key"
+            android:summaryOff="@string/pref_enable_notifications_false"
+            android:summaryOn="@string/pref_enable_notifications_true"
+            android:defaultValue="@string/pref_enable_notifications_default" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Show WindMill">
+        <CheckBoxPreference
+            android:title="@string/pref_enable_windmill_label"
+            android:key="@string/pref_enable_windmill_key"
+            android:summaryOff="@string/pref_enable_windmill_false"
+            android:summaryOn="@string/pref_enable_windmill_true"
+            android:defaultValue="@string/pref_enable_windmill_default" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -1,9 +1,11 @@
 package com.sunshine;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -229,7 +231,18 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mWind.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
 
             ////////////////////////////////
-            mWindMill.setSpeed(windSpeedStr);
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String displayWindMillKey = getActivity().getString(R.string.pref_enable_windmill_key);
+            boolean displayWindMill = prefs.getBoolean(displayWindMillKey ,
+                    Boolean.parseBoolean(getActivity().getString(R.string.pref_enable_windmill_default)));
+            if( displayWindMill )
+            {
+                mWindMill.setVisibility(View.VISIBLE);
+                mWindMill.setSpeed(windSpeedStr);
+            }
+            else
+                mWindMill.setVisibility(View.INVISIBLE);
             ////////////////////////////////
 
             // Read pressure from cursor and update view

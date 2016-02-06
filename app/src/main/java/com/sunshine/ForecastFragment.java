@@ -1,10 +1,15 @@
 package com.sunshine;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -24,6 +29,7 @@ import com.sunshine.sync.SunshineSyncAdapter;
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private static final int FORECAST_LOADER = 0;
+    public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
 
     private ListView listView = null;
     private SharedPreferences sharedPref = null;
@@ -100,6 +106,26 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.forecastfragment_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_maplocation) {
+            openPreferredLocationInMap();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public void setUseTodayLayout(boolean useTodayLayout)
     {
         mUseTodayLayout = useTodayLayout;
@@ -155,6 +181,30 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mForecastAdapter.swapCursor(data);
         if (mPosition != ListView.INVALID_POSITION)
             listView.smoothScrollToPosition(mPosition);
+    }
+
+    private void openPreferredLocationInMap()
+    {
+        if ( null != mForecastAdapter )
+        {
+            Cursor c = mForecastAdapter.getCursor();
+            if ( null != c )
+            {
+                c.moveToPosition(0);
+                String posLat = c.getString(COL_COORD_LAT);
+                String posLong = c.getString(COL_COORD_LONG);
+                Uri geoLocation = Uri.parse("geo:" + posLat + "," + posLong);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null)
+                    startActivity(intent);
+                else
+                    Log.d(LOG_TAG, "Couldn't call " + geoLocation.toString() + ", no receiving apps installed!");
+            }
+
+        }
     }
 
     @Override
