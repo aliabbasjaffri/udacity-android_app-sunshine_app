@@ -1,11 +1,5 @@
 package com.sunshine;
 
-import java.net.URL;
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.CursorLoader;
@@ -22,7 +16,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.sunshine.data.WeatherContract;
-import com.sunshine.service.SunshineService;
+import com.sunshine.sync.SunshineSyncAdapter;
 
 /**
  * Created by aliabbasjaffri on 24/10/15.
@@ -121,16 +115,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     void updateWeather()
     {
-        Intent alarmIntent = new Intent( getActivity() , SunshineService.AlarmReceiver.class );
-        alarmIntent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
-
-        AlarmManager alarmManager = (AlarmManager)getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000,
-                PendingIntent.getBroadcast(getActivity(), 0,alarmIntent,PendingIntent.FLAG_ONE_SHOT));
-
-        getActivity().startService(new Intent( getActivity() , SunshineService.class)
-                .putExtra(SunshineService.LOCATION_QUERY_EXTRA , Utility.getPreferredLocation(getActivity())));
-
+        SunshineSyncAdapter.syncImmediately(getActivity());
         mForecastAdapter.notifyDataSetChanged();
     }
 

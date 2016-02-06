@@ -43,4 +43,9 @@
     <string name="format_humidity">Humidity: <xliff:g id="humidity">%1.0f</xliff:g> %%</string>
 
 
+    <!-- Account type (for sync-adapter authenticator) -->
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">sunshine.com</string>
+    <string name="content_authority">com.sunshine</string>
+
 </resources>
