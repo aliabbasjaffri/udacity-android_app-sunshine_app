@@ -10,4 +10,13 @@
         android:id="@+id/listView_forecast"
         android:divider="@null"/>
 
+    <TextView
+        android:id="@+id/noWeatherInformationAvailable"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:text="@string/noWeatherInformation"
+        android:padding="@dimen/activity_vertical_margin"
+        />
+
 </FrameLayout>

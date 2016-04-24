@@ -67,4 +67,6 @@
     <!-- Strings related to Notification preference -->
     <string name="pref_last_notification">last_notification</string>
 
+    <string name="noWeatherInformation">No Weather Information Available</string>
+
 </resources>

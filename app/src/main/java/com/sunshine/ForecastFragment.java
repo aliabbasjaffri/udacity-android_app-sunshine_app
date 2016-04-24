@@ -98,6 +98,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
+        listView.setEmptyView(view.findViewById(R.id.noWeatherInformationAvailable));
+
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY))
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
 
