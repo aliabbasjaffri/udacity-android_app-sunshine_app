@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.widget.TextView;
 
 import com.sunshine.data.WeatherContract;
 import com.sunshine.sync.SunshineSyncAdapter;
@@ -98,7 +99,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             }
         });
 
-        listView.setEmptyView(view.findViewById(R.id.noWeatherInformationAvailable));
+        listView.setEmptyView(view.findViewById(R.id.noWeatherInformationAvailableTextView));
 
         if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY))
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
@@ -106,6 +107,22 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
 
         return view;
+    }
+
+    private void updateEmptyView()
+    {
+        if(mForecastAdapter.getCount() == 0)
+        {
+            TextView emptyText = (TextView) getView().findViewById(R.id.noWeatherInformationAvailableTextView);
+            if(emptyText != null)
+            {
+                int message = R.string.noWeatherInformation;
+                if(Utility.isNetWorkAvailable(getActivity()))
+                    message = R.string.noWeatherInformationNoInternet;
+
+                emptyText.setText(message);
+            }
+        }
     }
 
     @Override
@@ -183,6 +200,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mForecastAdapter.swapCursor(data);
         if (mPosition != ListView.INVALID_POSITION)
             listView.smoothScrollToPosition(mPosition);
+
+        updateEmptyView();
     }
 
     private void openPreferredLocationInMap()

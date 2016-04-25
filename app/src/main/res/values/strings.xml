@@ -69,4 +69,6 @@
 
     <string name="noWeatherInformation">No Weather Information Available</string>
 
+    <string name="noWeatherInformationNoInternet">No Weather Information Available. No internet is available to fetch Weather Data</string>
+
 </resources>

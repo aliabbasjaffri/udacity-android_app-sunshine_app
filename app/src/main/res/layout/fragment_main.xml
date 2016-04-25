@@ -11,7 +11,7 @@
         android:divider="@null"/>
 
     <TextView
-        android:id="@+id/noWeatherInformationAvailable"
+        android:id="@+id/noWeatherInformationAvailableTextView"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:gravity="center"
