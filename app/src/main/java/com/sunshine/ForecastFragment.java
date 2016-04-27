@@ -125,28 +125,29 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         super.onPause();
     }
 
-    private void updateEmptyView()
-    {
-        if(mForecastAdapter.getCount() == 0)
-        {
+    private void updateEmptyView() {
+        if (mForecastAdapter.getCount() == 0) {
             TextView emptyText = (TextView) getView().findViewById(R.id.noWeatherInformationAvailableTextView);
-            if(emptyText != null)
-            {
+            if (emptyText != null) {
                 int message = R.string.noWeatherInformation;
                 @SunshineSyncAdapter.LocationStatus int location = Utility.getLocationStatus(getActivity());
                 switch (location) {
-                case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
-                    message = R.string.empty_forecast_list_server_down;
-                    break;
-                case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
-                    message = R.string.empty_forecast_list_server_error;
-                    break;
-                default:
-                    if (!Utility.isNetworkAvailable(getActivity()) ) {
-                        message = R.string.empty_forecast_list_no_network;
-                    }
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
+                        message = R.string.empty_forecast_list_server_down;
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
+                        message = R.string.empty_forecast_list_server_error;
+                        break;
+                    case SunshineSyncAdapter.LOCATION_STATUS_INVALID:
+                        message = R.string.empty_forecast_list_invalid_location;
+                        break;
+                    default:
+                        if (!Utility.isNetWorkAvailable(getActivity())) {
+                            message = R.string.noWeatherInformationNoInternet;
+                        }
 
-                emptyText.setText(message);
+                        emptyText.setText(message);
+                }
             }
         }
     }
