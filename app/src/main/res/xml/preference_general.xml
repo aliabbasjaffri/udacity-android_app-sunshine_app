@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.sunshine"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,7 +11,8 @@
             android:key="@string/settings_location_key"
             android:defaultValue="@string/settings_location_default"
             android:singleLine="true"
-            android:inputType="text"/>
+            android:inputType="text"
+            custom:minLength="3"/>
     </PreferenceCategory>
 
     <PreferenceCategory
