@@ -5,7 +5,7 @@
 
     <PreferenceCategory
         android:title="Set Location">
-        <EditTextPreference
+        <com.sunshine.LocationEditTextPreference
             android:title="@string/settings_location"
             android:key="@string/settings_location_key"
             android:defaultValue="@string/settings_location_default"
