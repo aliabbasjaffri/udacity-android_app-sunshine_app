@@ -206,8 +206,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mDate.setText(dateText);
 
             // Read description from cursor and update view
-            String description = data.getString(COL_WEATHER_DESC);
+            String description = Utility.getStringForWeatherCondition(getActivity(), weatherId);
             mDescription.setText(description);
+            mDescription.setContentDescription(getString(R.string.a11y_forecast, description));
 
             // Read high temperature from cursor and update view
             boolean isMetric = Utility.isMetric(getActivity());
@@ -215,20 +216,24 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             double high = data.getDouble(COL_WEATHER_MAX_TEMP);
             String highString = Utility.formatTemperature(getActivity(), high);
             mHighTemp.setText(highString);
+            mHighTemp.setContentDescription(getString(R.string.a11y_high_temp, highString));
 
             // Read low temperature from cursor and update view
             double low = data.getDouble(COL_WEATHER_MIN_TEMP);
             String lowString = Utility.formatTemperature(getActivity(), low);
             mLowTemp.setText(lowString);
+            mLowTemp.setContentDescription(getString(R.string.a11y_low_temp, lowString));
 
             // Read humidity from cursor and update view
             float humidity = data.getFloat(COL_WEATHER_HUMIDITY);
             mHumidity.setText(getActivity().getString(R.string.format_humidity, humidity));
+            mHumidity.setContentDescription(mHumidity.getText());
 
             // Read wind speed and direction from cursor and update view
             float windSpeedStr = data.getFloat(COL_WEATHER_WIND_SPEED);
             float windDirStr = data.getFloat(COL_WEATHER_DEGREES);
             mWind.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
+            mWind.setContentDescription(mWind.getText());
 
             ////////////////////////////////
 
@@ -248,6 +253,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // Read pressure from cursor and update view
             float pressure = data.getFloat(COL_WEATHER_PRESSURE);
             mPressure.setText(getActivity().getString(R.string.format_pressure, pressure));
+            mPressure.setContentDescription(mPressure.getText());
 
             // We still need this for the share intent
             weatherReport = String.format("%s - %s - %s/%s", dateText, description, high, low);
