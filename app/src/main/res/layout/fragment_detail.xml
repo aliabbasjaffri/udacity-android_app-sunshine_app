@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:padding="16dp"
         android:gravity="center_vertical"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         tools:context="com.sunshine.DetailActivity">
 
         <TextView
