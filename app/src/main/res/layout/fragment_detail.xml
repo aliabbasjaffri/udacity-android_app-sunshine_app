@@ -78,7 +78,8 @@
                     android:src="@drawable/ic_launcher"
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
-                    android:id="@+id/detailFragmentIcon" />
+                    android:id="@+id/detailFragmentIcon"
+                    android:adjustViewBounds="true"/>
 
                 <TextView
                     android:text="Clear"

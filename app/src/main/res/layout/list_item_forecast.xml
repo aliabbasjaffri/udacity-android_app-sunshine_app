@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="weatherImage"
             android:src="@drawable/ic_logo"
+            android:adjustViewBounds="true"
             android:layout_gravity="center" />
     </FrameLayout>
 

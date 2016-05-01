@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+
 /**
  * Created by aliabbasjaffri on 24/10/15.
  */
@@ -79,19 +82,26 @@ public class ForecastAdapter extends CursorAdapter
 
         int weatherId = cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
         int viewType = getItemViewType(cursor.getPosition());
+        int fallBackIconID;
         switch (viewType)
         {
             case VIEW_TYPE_TODAY:
             {
-                viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
+                fallBackIconID = Utility.getArtResourceForWeatherCondition(weatherId);
                 break;
             }
-            case VIEW_TYPE_FUTURE_DAY:
+            default:
             {
-                viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(weatherId));
+                fallBackIconID = Utility.getIconResourceForWeatherCondition(weatherId);
                 break;
             }
         }
+
+        Glide.with(mContext)
+            .load(Utility.getArtUrlForWeatherCondition(mContext, weatherId))
+            .error(fallBackIconID)
+            .crossFade()
+            .into(viewHolder.iconView);
 
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
         viewHolder.dateView.setText(Utility.getFriendlyDayString(context, dateInMillis));
