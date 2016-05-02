@@ -414,33 +414,34 @@ public class Utility {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String formatArtUrl = prefs.getString(context.getString(R.string.pref_art_pack_key),
                 context.getString(R.string.pref_art_pack_sunshine));
+        String weatherCondition = "";
 
         // Based on weather code data found at:
         // http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
         if (weatherId >= 200 && weatherId <= 232) {
-            return String.format(Locale.US, formatArtUrl, "storm");
+            weatherCondition = "storm";
         } else if (weatherId >= 300 && weatherId <= 321) {
-            return String.format(Locale.US, formatArtUrl, "light_rain");
+            weatherCondition = "light_rain";
         } else if (weatherId >= 500 && weatherId <= 504) {
-            return String.format(Locale.US, formatArtUrl, "rain");
+            weatherCondition = "rain";
         } else if (weatherId == 511) {
-            return String.format(Locale.US, formatArtUrl, "snow");
+            weatherCondition = "snow";
         } else if (weatherId >= 520 && weatherId <= 531) {
-            return String.format(Locale.US, formatArtUrl, "rain");
+            weatherCondition = "rain";
         } else if (weatherId >= 600 && weatherId <= 622) {
-            return String.format(Locale.US, formatArtUrl, "snow");
+            weatherCondition = "snow";
         } else if (weatherId >= 701 && weatherId <= 761) {
-            return String.format(Locale.US, formatArtUrl, "fog");
+            weatherCondition = "fog";
         } else if (weatherId == 761 || weatherId == 781) {
-            return String.format(Locale.US, formatArtUrl, "storm");
+            weatherCondition = "storm";
         } else if (weatherId == 800) {
-            return String.format(Locale.US, formatArtUrl, "clear");
+            weatherCondition = "clear";
         } else if (weatherId == 801) {
-            return String.format(Locale.US, formatArtUrl, "light_clouds");
+            weatherCondition = "light_clouds";
         } else if (weatherId >= 802 && weatherId <= 804) {
-            return String.format(Locale.US, formatArtUrl, "clouds");
+            weatherCondition = "clouds";
         }
-        return null;
+        return String.format(Locale.US, formatArtUrl, weatherCondition);
     }
 
     static public boolean isNetWorkAvailable(Context c)
